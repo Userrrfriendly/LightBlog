@@ -10,7 +10,7 @@ import { Route, Switch, Router } from 'react-router-dom';
 import store from './store';
 import { App } from './components';
 
-import '../resources/scss/style.scss';
+import './resources/scss/style.scss';
 
 
 ReactDOM.render(
