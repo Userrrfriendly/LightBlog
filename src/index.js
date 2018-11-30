@@ -1,26 +1,17 @@
 
 import React from 'react';
-import createHistory from 'history/createBrowserHistory';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 
-import { Provider } from 'react-redux';
-import { Route, Switch, Router } from 'react-router-dom';
-
-import store from './store';
-import { App } from './components';
-
+import { BrowserRouter } from 'react-router-dom';
 import './resources/scss/style.scss';
 
+import App from './components/App/App';
 
 ReactDOM.render(
-  <Router history={createHistory()}>
-    <Provider store={store}>
-      <Switch>
-        <Route path="/" component={App} />
-      </Switch>
-    </Provider>
-  </Router>,
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
   document.getElementById('root'),
 );
 

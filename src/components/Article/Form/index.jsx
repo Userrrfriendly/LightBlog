@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 
 class Form extends React.Component {
   constructor(props) {
@@ -85,13 +85,13 @@ class Form extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  onSubmit: data => dispatch({ type: 'SUBMIT_ARTICLE', data }),
-  onEdit: data => dispatch({ type: 'EDIT_ARTICLE', data }),
-});
+// const mapDispatchToProps = dispatch => ({
+//   onSubmit: data => dispatch({ type: 'SUBMIT_ARTICLE', data }),
+//   onEdit: data => dispatch({ type: 'EDIT_ARTICLE', data }),
+// });
 
-const mapStateToProps = state => ({
-  articleToEdit: state.home.articleToEdit,
-});
+// const mapStateToProps = state => ({
+//   articleToEdit: state.home.articleToEdit,
+// });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Form);
+export default Form;
