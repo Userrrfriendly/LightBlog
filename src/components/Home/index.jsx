@@ -14,7 +14,6 @@ class Home extends React.Component {
     this.handleEdit = this.handleEdit.bind(this);
   }
 
-  //end testing
   componentDidMount() {
     // console.log(this.props);
     const { onLoad } = this.props;
@@ -37,7 +36,7 @@ class Home extends React.Component {
   }
 
   render() {
-    console.log(this.props)
+    // console.log(this.props)
     const { articles } = this.props;
 
     return (
