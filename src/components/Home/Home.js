@@ -39,7 +39,7 @@ class Home extends React.Component {
       <Consumer>
         {context => {
           // const context = Consumer;
-          console.log(context.state);
+          // console.log(context.state);
           return (
             <div className="container">
             <div className="row pt-5">

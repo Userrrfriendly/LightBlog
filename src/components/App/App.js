@@ -36,16 +36,17 @@ class App extends React.Component {
   }
 
   editArticle = (data)=> {
+    //submits an existing  article that is in edit mode
     this.setState({
       articles: this.state.articles.map((article)=>{
         if (article._id === data.article._id) {
           return {
             ...data.article
-          } 
-          } else {
-            return {
-              ...article
-            }
+          }
+        } else {
+          return {
+            ...article
+          }
         }
       }),
       articleToEdit: undefined
@@ -65,10 +66,18 @@ class App extends React.Component {
           editArticle: this.editArticle
         }
       }}>
+      {/* <Home 
+            state={this.state}
+            getArticles={this.getArticles}
+            deleteArticle={this.deleteArticle}
+            setEdit={this.setEdit}
+            submitArticle={this.submitArticle}
+            editArticle={this.editArticle}
+      /> */}
         <Switch>
-          <Route exact path="/" render={()=> <Home />} />
-          <Route exact path="/about" render={()=>{return (<h1>ABOUT</h1>)}} /> 
-          <Route path="/about/me" render={()=>{return (<h2>ABOUT MEEE!!!!!!!!!!</h2>)}} />
+          <Route exact path="/" component={Home} />
+          {/* <Route exact path="/about" render={()=>{return (<h1>ABOUT</h1>)}} /> 
+          <Route path="/about/me" render={()=>{return (<h2>ABOUT MEEE!!!!!!!!!!</h2>)}} /> */}
         </Switch>
       </Provider>
     )
