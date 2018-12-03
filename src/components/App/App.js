@@ -6,35 +6,63 @@ import Home from '../../components/Home/Home';
 
 class App extends React.Component {
   state = {
-    articles:[
-      // {title:'Title TEst',
-      //   author:'Author Test',
-      //   body:'body TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST',
-      //   createdAt:"Fri Nov 30 2017 22:24:22 GMT+0200 (Eastern European Standard Time)",
-      //   _id:"12345678901"
-      // }
-    ]
+    articles:[],
+    articleToEdit:undefined
   }
 
-  onLoad = (articles)=> {
-    
-    // const test = ()=>{console.log(this)}
-    // test();
-    console.log(articles)
-    // const that = this;
-    // console.log(that);
+  getArticles = (articles)=> {
     this.setState({
-      articles:articles
+      articles
     });
-    // console.log('...fetching all articles from server');
+  }
+
+  deleteArticle = (id)=> {
+    this.setState({
+      articles: this.state.articles.filter((article)=> article._id !== id)
+    })
+  }
+
+  setEdit = (article)=> {
+    //sets the article in edit mode.
+    this.setState({
+      articleToEdit: article
+    })
+  }
+
+  submitArticle = (data)=> {
+    this.setState({
+      articles: ([data.article]).concat(this.state.articles)
+    })
+  }
+
+  editArticle = (data)=> {
+    this.setState({
+      articles: this.state.articles.map((article)=>{
+        if (article._id === data.article._id) {
+          return {
+            ...data.article
+          } 
+          } else {
+            return {
+              ...article
+            }
+        }
+      }),
+      articleToEdit: undefined
+    })
   }
 
   render () {
     return (
       <Provider value={{
-        state: this.state,
+        state: this.state.articles,
+        articleToEdit: this.state.articleToEdit,
         actions: {
-          onLoad: this.onLoad
+          getArticles: this.getArticles,
+          deleteArticle: this.deleteArticle,
+          setEdit: this.setEdit,
+          submitArticle: this.submitArticle,
+          editArticle: this.editArticle
         }
       }}>
         <Switch>

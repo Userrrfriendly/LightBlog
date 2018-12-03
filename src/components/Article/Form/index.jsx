@@ -1,36 +1,34 @@
 import axios from 'axios';
 import React from 'react';
-// import { connect } from 'react-redux';
-
+import { Consumer, AppContext } from '../../Context'
 class Form extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      title: '',
-      body: '',
-      author: '',
-    }
-
-    this.handleChangeField = this.handleChangeField.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  state = {
+    title: '',
+    body: '',
+    author: '',
+    articleToEdit:undefined
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.articleToEdit) {
+  componentDidUpdate(prevProps,prevState) {
+    if (this.props.articleToEdit && this.props.articleToEdit !== prevProps.articleToEdit) {
+      console.log('componentDidUpdate')
       this.setState({
-        title: nextProps.articleToEdit.title,
-        body: nextProps.articleToEdit.body,
-        author: nextProps.articleToEdit.author,
-      });
+        title: this.props.articleToEdit.title,
+        body: this.props.articleToEdit.body,
+        author: this.props.articleToEdit.author,
+        articleToEdit:this.props.articleToEdit
+      })
     }
   }
 
-  handleSubmit(){
-    const { onSubmit, articleToEdit, onEdit } = this.props;
+  handleSubmit = ()=> {
+    console.log('submitting article');
+    const onSubmit = this.context.actions.submitArticle;
+    const onEdit = this.context.actions.editArticle;
     const { title, body, author } = this.state;
 
-    if(!articleToEdit) {
+    if(!this.state.articleToEdit) {
       return axios.post('http://localhost:8000/api/articles', {
         title,
         body,
@@ -39,7 +37,7 @@ class Form extends React.Component {
         .then((res) => onSubmit(res.data))
         .then(() => this.setState({ title: '', body: '', author: '' }));
     } else {
-      return axios.patch(`http://localhost:8000/api/articles/${articleToEdit._id}`, {
+      return axios.patch(`http://localhost:8000/api/articles/${this.state.articleToEdit._id}`, {
         title,
         body,
         author,
@@ -60,38 +58,35 @@ class Form extends React.Component {
     const { title, body, author } = this.state;
 
     return (
-      <div className="col-12 col-lg-6 offset-lg-3">
-        <input
-          onChange={(ev) => this.handleChangeField('title', ev)}
-          value={title}
-          className="form-control my-3"
-          placeholder="Article Title"
-        />
-        <textarea
-          onChange={(ev) => this.handleChangeField('body', ev)}
-          className="form-control my-3"
-          placeholder="Article Body"
-          value={body}>
-        </textarea>
-        <input
-          onChange={(ev) => this.handleChangeField('author', ev)}
-          value={author}
-          className="form-control my-3"
-          placeholder="Article Author"
-        />
-        <button onClick={this.handleSubmit} className="btn btn-primary float-right">{articleToEdit ? 'Update' : 'Submit'}</button>
-      </div>
+      <Consumer>
+        {context=> { return (
+          <div className="col-12 col-lg-6 offset-lg-3">
+            <input
+              onChange={(ev) => this.handleChangeField('title', ev)}
+              value={title}
+              className="form-control my-3"
+              placeholder="Article Title"
+            />
+            <textarea
+              onChange={(ev) => this.handleChangeField('body', ev)}
+              className="form-control my-3"
+              placeholder="Article Body"
+              value={body}>
+            </textarea>
+            <input
+              onChange={(ev) => this.handleChangeField('author', ev)}
+              value={author}
+              className="form-control my-3"
+              placeholder="Article Author"
+            />
+            <button onClick={this.handleSubmit} className="btn btn-primary float-right">{articleToEdit ? 'Update' : 'Submit'}</button>
+          </div>
+          )}
+        }
+      </Consumer>
     )
   }
 }
-
-// const mapDispatchToProps = dispatch => ({
-//   onSubmit: data => dispatch({ type: 'SUBMIT_ARTICLE', data }),
-//   onEdit: data => dispatch({ type: 'EDIT_ARTICLE', data }),
-// });
-
-// const mapStateToProps = state => ({
-//   articleToEdit: state.home.articleToEdit,
-// });
+Form.contextType = AppContext;
 
 export default Form;

@@ -7,59 +7,29 @@ import { Consumer, AppContext } from '../Context';
 import { Form } from '../../components/Article';
 
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
+  // constructor(props) {
+  //   super(props);
 
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-  }
+  //   this.handleDelete = this.handleDelete.bind(this);
+  //   this.handleEdit = this.handleEdit.bind(this);
+  // }
 
   componentDidMount() {
-    // let value = this.context;
-    // console.log(this.props.onLoad);
-
-    // this.props.onLoad(
-    //   [
-    //     {title:'AATitle TEst',
-    //       author:'AAAAuthor Test',
-    //       body:'AAAbody TEST',
-    //       createdAt:"Fri Nov 20 2017 22:24:22 GMT+0200 (Eastern European Standard Time)",
-    //       _id:"A12345678901"
-    //     }
-    //   ]
-    // );
-
-    this.context.actions.onLoad(
-      [
-        {title:'AATitle TEst',
-          author:'AAAAuthor Test',
-          body:'AAAbody TEST',
-          createdAt:"Fri Nov 20 2017 22:24:22 GMT+0200 (Eastern European Standard Time)",
-          _id:"A12345678901"
-        }
-      ]
-    );
-
-    // console.log(value.actions.onLoad);
-    // value.actions.onLoad();
-    // const { onLoad } = this.props;
-    // const onLoadz = value.actions.getArticles;
-    // axios('http://localhost:8000/api/articles')
-    //   .then((res) => onLoad(res.data))
-    //   .catch(onLoadz);
+    const getArticles = this.context.actions.getArticles;
+    axios('http://localhost:8000/api/articles')
+      .then((res) => getArticles(res.data.articles));
   }
 
-  handleDelete(id) {
-    const { onDelete } = this.props;
-
+  handleDelete = (id)=> {
+    const onDelete = this.context.actions.deleteArticle;
+    onDelete(id);
     return axios.delete(`http://localhost:8000/api/articles/${id}`)
       .then(() => onDelete(id));
   }
 
-  handleEdit(article) {
-    const { setEdit } = this.props;
-
-    setEdit(article);
+  handleEdit = (article)=> {
+    const articleToEdit = this.context.actions.setEdit;
+    articleToEdit(article);
   }
 
   render() {
@@ -69,18 +39,18 @@ class Home extends React.Component {
       <Consumer>
         {context => {
           // const context = Consumer;
-          console.log(context);
+          console.log(context.state);
           return (
             <div className="container">
             <div className="row pt-5">
               <div className="col-12 col-lg-6 offset-lg-3">
                 <h1 className="text-center">LightBlog</h1>
               </div>
-              <Form />
+              <Form articleToEdit={this.context.articleToEdit}/>
             </div>
             <div className="row pt-5">
               <div className="col-12 col-lg-6 offset-lg-3">
-                {context.state.articles.map((article) => {
+                {context.state.map((article) => {
                   return (
                     <div key={article._id}className="card my-3">
                       <div className="card-header">
