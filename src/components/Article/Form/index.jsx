@@ -58,8 +58,8 @@ class Form extends React.Component {
     const { title, body, author } = this.state;
 
     return (
-      <Consumer>
-        {context=> { return (
+      // <Consumer>
+      //   {context=> { return (
           <div className="col-12 col-lg-6 offset-lg-3">
             <input
               onChange={(ev) => this.handleChangeField('title', ev)}
@@ -82,10 +82,10 @@ class Form extends React.Component {
             <button onClick={this.handleSubmit} className="btn btn-primary float-right">{articleToEdit ? 'Update' : 'Submit'}</button>
           </div>
           )}
-        }
-      </Consumer>
-    )
-  }
+        // }
+      // </Consumer>
+    // )
+  // }
 }
 Form.contextType = AppContext;
 

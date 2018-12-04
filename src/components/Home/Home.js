@@ -2,7 +2,6 @@
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment'; //JavaScript date library for parsing, validating, manipulating, and formatting dates.
-
 import { Consumer, AppContext } from '../Context';
 import { Form } from '../../components/Article';
 
@@ -17,12 +16,11 @@ class Home extends React.Component {
   componentDidMount() {
     const getArticles = this.context.actions.getArticles;
     axios('http://localhost:8000/api/articles')
-      .then((res) => getArticles(res.data.articles));
+    .then((res) => getArticles(res.data.articles));
   }
 
   handleDelete = (id)=> {
     const onDelete = this.context.actions.deleteArticle;
-    onDelete(id);
     return axios.delete(`http://localhost:8000/api/articles/${id}`)
       .then(() => onDelete(id));
   }
@@ -33,13 +31,9 @@ class Home extends React.Component {
   }
 
   render() {
-    // const { articles } = this.props;
-
     return (
       <Consumer>
         {context => {
-          // const context = Consumer;
-          // console.log(context.state);
           return (
             <div className="container">
             <div className="row pt-5">
@@ -84,15 +78,6 @@ class Home extends React.Component {
   }
 }
 Home.contextType = AppContext;
-// const mapStateToProps = state => ( {
-//   articles: state.home.articles,
-// });
 
-
-// const mapDispatchToProps = dispatch => ({
-//   onLoad: data => dispatch({ type: 'HOME_PAGE_LOADED', data }),
-//   onDelete: id => dispatch({ type: 'DELETE_ARTICLE', id }),
-//   setEdit: article => dispatch({ type: 'SET_EDIT', article }),
-// });
 
 export default Home;
