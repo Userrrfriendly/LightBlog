@@ -1,5 +1,5 @@
 import React from 'react';
-
+import axios from 'axios'
 export const AppContext = React.createContext();
 
 // export const Provider = AppContext.Provider;
@@ -9,16 +9,21 @@ export class Provider extends React.Component {
         articleToEdit:undefined
       }
     
-      getArticles = (articles)=> {
-        this.setState({
-          articles
-        });
+      getArticles = ()=> {
+        axios('http://localhost:8000/api/articles')
+        .then((res) => {
+            this.setState({
+                articles:res.data.articles
+            })
+        })
       }
     
       deleteArticle = (id)=> {
-        this.setState({
-          articles: this.state.articles.filter((article)=> article._id !== id)
-        })
+        // const onDelete = this.context.actions.deleteArticle;
+        return axios.delete(`http://localhost:8000/api/articles/${id}`)
+          .then(() => this.setState({
+            articles: this.state.articles.filter((article)=> article._id !== id)
+          }));
       }
     
       setEdit = (article)=> {
@@ -28,28 +33,41 @@ export class Provider extends React.Component {
         })
       }
     
-      submitArticle = (data)=> {
-        this.setState({
-          articles: ([data.article]).concat(this.state.articles)
-        })
+      submitNewArticle = (title,body,author)=> {
+        //this submits a new article
+        return axios.post('http://localhost:8000/api/articles', {
+            title,
+            body,
+            author,
+        }).then(res=>
+            this.setState({
+                articles: ([res.data.article]).concat(this.state.articles)
+            })
+        )
       }
     
-      editArticle = (data)=> {
+      submitEditedArticle = (title,body,author)=> {
         //submits an existing  article that is in edit mode
-        this.setState({
-          articles: this.state.articles.map((article)=>{
-            if (article._id === data.article._id) {
-              return {
-                ...data.article
-              }
-            } else {
-              return {
-                ...article
-              }
-            }
-          }),
-          articleToEdit: undefined
-        })
+        return axios.patch(`http://localhost:8000/api/articles/${this.state.articleToEdit._id}`, {
+            title,
+            body,
+            author,
+          }).then(res=>
+              this.setState({
+                articles: this.state.articles.map((article)=>{
+                  if (article._id === res.data.article._id) {
+                    return {
+                      ...res.data.article
+                    }
+                  } else {
+                    return {
+                      ...article
+                    }
+                  }
+                }),
+                articleToEdit: undefined
+              })
+          )
       }
 
     render() {
@@ -61,8 +79,8 @@ export class Provider extends React.Component {
                   getArticles: this.getArticles,
                   deleteArticle: this.deleteArticle,
                   setEdit: this.setEdit,
-                  submitArticle: this.submitArticle,
-                  editArticle: this.editArticle
+                  submitNewArticle: this.submitNewArticle,
+                  submitEditedArticle: this.submitEditedArticle
                 }
               }}>
               {this.props.children}

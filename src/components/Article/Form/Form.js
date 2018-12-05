@@ -1,6 +1,5 @@
-import axios from 'axios';
 import React from 'react';
-import { Consumer, AppContext } from '../../Context'
+import { AppContext } from '../../Context'
 class Form extends React.Component {
 
   state = {
@@ -12,7 +11,7 @@ class Form extends React.Component {
 
   componentDidUpdate(prevProps,prevState) {
     if (this.props.articleToEdit && this.props.articleToEdit !== prevProps.articleToEdit) {
-      console.log('componentDidUpdate')
+      // console.log('componentDidUpdate')
       this.setState({
         title: this.props.articleToEdit.title,
         body: this.props.articleToEdit.body,
@@ -23,27 +22,21 @@ class Form extends React.Component {
   }
 
   handleSubmit = ()=> {
-    console.log('submitting article');
-    const onSubmit = this.context.actions.submitArticle;
-    const onEdit = this.context.actions.editArticle;
+    // console.log('submitting article');
+    const onSubmit = this.context.actions.submitNewArticle;
+    const onEdit = this.context.actions.submitEditedArticle;
     const { title, body, author } = this.state;
 
     if(!this.state.articleToEdit) {
-      return axios.post('http://localhost:8000/api/articles', {
-        title,
-        body,
-        author,
-      })
-        .then((res) => onSubmit(res.data))
+        return new Promise((resolve,reject)=>{
+          resolve (onSubmit(title,body,author))
+        })
         .then(() => this.setState({ title: '', body: '', author: '' }));
     } else {
-      return axios.patch(`http://localhost:8000/api/articles/${this.state.articleToEdit._id}`, {
-        title,
-        body,
-        author,
+      return new Promise((resolve,reject)=>{
+        resolve(onEdit(title,body,author))
       })
-        .then((res) => onEdit(res.data))
-        .then(() => this.setState({ title: '', body: '', author: '' }));
+      .then(() => this.setState({ title: '', body: '', author: '' }));
     }
   }
 
@@ -58,8 +51,6 @@ class Form extends React.Component {
     const { title, body, author } = this.state;
 
     return (
-      // <Consumer>
-      //   {context=> { return (
           <div className="col-12 col-lg-6 offset-lg-3">
             <input
               onChange={(ev) => this.handleChangeField('title', ev)}
@@ -82,10 +73,6 @@ class Form extends React.Component {
             <button onClick={this.handleSubmit} className="btn btn-primary float-right">{articleToEdit ? 'Update' : 'Submit'}</button>
           </div>
           )}
-        // }
-      // </Consumer>
-    // )
-  // }
 }
 Form.contextType = AppContext;
 

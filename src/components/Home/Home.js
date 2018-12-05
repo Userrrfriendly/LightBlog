@@ -1,28 +1,19 @@
 
 import React from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import moment from 'moment'; //JavaScript date library for parsing, validating, manipulating, and formatting dates.
 import { Consumer, AppContext } from '../Context';
 import { Form } from '../../components/Article';
 
 class Home extends React.Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.handleDelete = this.handleDelete.bind(this);
-  //   this.handleEdit = this.handleEdit.bind(this);
-  // }
-
   componentDidMount() {
     const getArticles = this.context.actions.getArticles;
-    axios('http://localhost:8000/api/articles')
-    .then((res) => getArticles(res.data.articles));
+    getArticles();
   }
 
   handleDelete = (id)=> {
     const onDelete = this.context.actions.deleteArticle;
-    return axios.delete(`http://localhost:8000/api/articles/${id}`)
-      .then(() => onDelete(id));
+    onDelete(id);
   }
 
   handleEdit = (article)=> {
